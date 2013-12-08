@@ -5,7 +5,7 @@
 	$mysqli = new mysqli($config['server'], $config['username'], $config['password'], $config['database']);
   }
   $file = 'files/'.trim(htmlspecialchars(htmlspecialchars_decode($_GET['file'], ENT_NOQUOTES), ENT_NOQUOTES));
-  $filesql = $mysqli->real_escape_string($file);
+  $filesql = preg_replace('/files\//', '', $mysqli->real_escape_string($file));
   $contenttype = 'application/octet-stream';
 
   if (!file_exists($file)) {
@@ -91,6 +91,8 @@
   } else {
     readfile($file);
   }
-  $mysqli->query("INSERT INTO `quick`.`".$config['table']."` (`filename`, `ip`, `referer`, `agent`, `duration`, `status`) VALUES ('".$filesql."', '".$_SERVER['HTTP_HOST']."', '".$_SERVER['HTTP_REFERER']."', '".$_SERVER['HTTP_USER_AGENT']."', '".sprintf ("%01.2f sec", (MicroTime(1)-$startmicrotime))."', 'downloaded');");
+  if (!$mysqli->query("INSERT INTO `".$config['database']."`.`".$config['table']."` (`filename`, `ip`, `referer`, `agent`, `duration`, `status`) VALUES ('".$filesql."', '".$_SERVER['REMOTE_ADDR']."', '".$_SERVER['HTTP_REFERER']."', '".$_SERVER['HTTP_USER_AGENT']."', '".sprintf ("%01.2f sec", (MicroTime(1)-$startmicrotime))."', 'downloaded');")) {
+    printf("%s\n", $mysqli->error);
+  }
   exit;
 ?>
