@@ -1,7 +1,11 @@
 <?php
+  $startmicrotime = MicroTime(1);
   require_once('config.php');
+  if ( !empty($config['server']) && !empty($config['username']) && !empty($config['password']) && !empty($config['database']) ) {
+	$mysqli = new mysqli($config['server'], $config['username'], $config['password'], $config['database']);
+  }
   $file = 'files/'.trim(htmlspecialchars(htmlspecialchars_decode($_GET['file'], ENT_NOQUOTES), ENT_NOQUOTES));
-  // From DaveRandom from http://stackoverflow.com/a/4451376
+  $filesql = $mysqli->real_escape_string($file);
   $contenttype = 'application/octet-stream';
 
   if (!file_exists($file)) {
@@ -87,5 +91,6 @@
   } else {
     readfile($file);
   }
+  $mysqli->query("INSERT INTO `quick`.`".$config['table']."` (`filename`, `ip`, `referer`, `agent`, `duration`, `status`) VALUES ('".$filesql."', '".$_SERVER['HTTP_HOST']."', '".$_SERVER['HTTP_REFERER']."', '".$_SERVER['HTTP_USER_AGENT']."', '".sprintf ("%01.2f sec", (MicroTime(1)-$startmicrotime))."', 'downloaded');");
   exit;
 ?>

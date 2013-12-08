@@ -4,4 +4,5 @@
 	$config['database'] = '';
 	$config['username'] = '';
 	$config['password'] = '';
+	$config['table'] = '';
 ?>
