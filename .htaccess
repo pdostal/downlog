@@ -1,0 +1,6 @@
+ErrorDocument 404 "http://global.pdostal.cz/errors/404.php"
+Options -Indexes
+RewriteEngine on
+
+RewriteRule view.php view.php [L,QSA]
+RewriteRule ^(.+)$ index.php?file=$1 [L,QSA]
