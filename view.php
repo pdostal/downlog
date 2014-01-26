@@ -31,7 +31,7 @@
       .ip { min-width: 125px; }
       .status { min-width: 90px; }
       .duration { min-width: 70px; }
-      .referer { min-width: 60px; }
+      .referer { min-width: 60px; max-width: 150px; overflow: hidden; }
       .agent { min-width: 150px; }
     </style>
   </head>
