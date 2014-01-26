@@ -2,7 +2,7 @@
   $startmicrotime = MicroTime(1);
   require_once('config.php');
   if ( !empty($config['server']) && !empty($config['username']) && !empty($config['password']) && !empty($config['database']) ) {
-	$mysqli = new mysqli($config['server'], $config['username'], $config['password'], $config['database']);
+    $mysqli = new mysqli($config['server'], $config['username'], $config['password'], $config['database']);
   }
 ?>
 <!doctype html>
@@ -24,7 +24,15 @@
       header { height: 40px; top: 0px; padding-top: 5px; }
       footer { height: 20px; bottom: 0px; padding-bottom: 5px; }
 
-      table { width: 98%; height: 100%; top: 0px; margin: 45px 1% 25px 1%; }
+      table { width: 98%; height: 100%; top: 0px; margin: 45px 5px 25px 5px; }
+
+      .filename { min-width: 150px; }
+      .datetime { min-width: 150px; }
+      .ip { min-width: 125px; }
+      .status { min-width: 90px; }
+      .duration { min-width: 70px; }
+      .referer { min-width: 60px; }
+      .agent { min-width: 150px; }
     </style>
   </head>
   <body>
@@ -34,26 +42,26 @@
     <table>
       <thead>
         <tr>
-          <th>File name</th>
-          <th>Date &amp; Time</th>
-          <th>IP</th>
-          <th>Status</th>
-          <th>IP Address</th>
-          <th>Duration</th>
-          <th>User agent</th>
+          <th class='filename'>File name</th>
+          <th class='datetime'>Date &amp; Time</th>
+          <th class='ip'>IP</th>
+          <th class='status'>Status</th>
+          <th class='duration'>Duration</th>
+          <th class='referer'>Referer</th>
+          <th class='agent'>User agent</th>
         </tr>
       </thead>
       <tbody>
 <?php
-  for ($i = 0; $i<1000; $i++) {
+  foreach ($mysqli->query('SELECT * FROM `'.$config['table'].'`') as $field) {
     echo "<tr>";
-    echo "<td>".rand()."</td>";
-    echo "<td>".rand()."</td>";
-    echo "<td>".rand()."</td>";
-    echo "<td>".rand()."</td>";
-    echo "<td>".rand()."</td>";
-    echo "<td>".rand()."</td>";
-    echo "<td>".rand()."</td>";
+    echo "<td class='filename'>".$field['filename']."</td>";
+    echo "<td class='datetime'>".$field['datetime']."</td>";
+    echo "<td class='ip'>".$field['ip']."</td>";
+    echo "<td class='status'>".$field['status']."</td>";
+    echo "<td class='duration'>".$field['duration']."</td>";
+    echo "<td class='referer'>".$field['referer']."</td>";
+    echo "<td class='agent'>".$field['agent']."</td>";
     echo "</tr>";
   }
 ?>
